@@ -4,10 +4,10 @@ resource "google_compute_network" "our_development_network" {
 }
 
 resource "google_compute_subnetwork" "dev_subnet" {
-  name = "devsubnet"
-  ip_cidr_range = "10.0.1.0/24"
-  network = "${google_compute_network.our_development_network.self_link}"
-  region = "us-west1"
+  name          = "${var.subnet_names."subnet1"}"
+  ip_cidr_range = "${var.gcp_ip_cidr_range}"
+  network       = "${google_compute_network.our_development_network.self_link}"
+  region        = "us-west1"
 }
 
 resource "aws_vpc" "environment_example_two" {
@@ -48,24 +48,24 @@ resource "aws_security_group" "subnetsecurity" {
 
 resource "azurerm_resource_group" "azy_network" {
   location = "West US"
-  name = "devresourcegroup"
+  name     = "devresourcegroup"
 }
 
 resource "azurerm_virtual_network" "blue_virtual_network" {
-  address_space = ["10.0.0.0/16"]
-  location = "West US"
-  name = "bluevirtnetwork"
+  address_space       = ["10.0.0.0/16"]
+  location            = "West US"
+  name                = "bluevirtnetwork"
   resource_group_name = "${azurerm_resource_group.azy_network.name}"
-  dns_servers = ["10.0.0.4", "10.0.0.5"]
+  dns_servers         = ["10.0.0.4", "10.0.0.5"]
 
   subnet {
     address_prefix = "10.0.1.0/24"
-    name = "subnet1"
+    name           = "subnet1"
   }
 
   subnet {
     address_prefix = "10.0.2.0/24"
-    name = "subnet2"
+    name           = "subnet2"
   }
 
   tags {
